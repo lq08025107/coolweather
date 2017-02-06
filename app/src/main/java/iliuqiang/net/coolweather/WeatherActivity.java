@@ -25,6 +25,7 @@ import java.io.IOException;
 
 import iliuqiang.net.coolweather.gson.Forecast;
 import iliuqiang.net.coolweather.gson.Weather;
+import iliuqiang.net.coolweather.service.AutoUpdateService;
 import iliuqiang.net.coolweather.util.HttpUtil;
 import iliuqiang.net.coolweather.util.Utility;
 import okhttp3.Call;
@@ -159,7 +160,9 @@ public class WeatherActivity extends AppCompatActivity {
                             SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(WeatherActivity.this).edit();
                             editor.putString("weather", responseText);
                             editor.apply();
+                            mWeatherId = weather.basic.weatherId;
                             showWeatherInfo(weather);
+
                         } else {
                             Toast.makeText(WeatherActivity.this, "获取天气信息失败", Toast.LENGTH_SHORT).show();
                         }
@@ -205,6 +208,9 @@ public class WeatherActivity extends AppCompatActivity {
         carWashText.setText(carWash);
         sportText.setText(sport);
         weatherLayout.setVisibility(View.VISIBLE);
+
+        Intent intent = new Intent(this, AutoUpdateService.class);
+        startService(intent);
     }
 
     private void loadBingPic(){
